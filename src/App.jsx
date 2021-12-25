@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect} from "react";
 import "./App.css";
 import Spinner from "./spinner"
 import ChanceWheel from "./chance-wheel"
@@ -31,8 +30,8 @@ const accordion = event => {
     setState({ ...state,value })
     console.log(state.value);
     var  n = event.target.value;
-    var temp = [];   
-    for (var i = 1; i <= Number(n); i++) { 
+    var temp = [];
+    for (var i = 1; i <= Number(n); i++) {
       temp.push(i);
   }
 }

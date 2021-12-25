@@ -1,12 +1,8 @@
 import React, { useEffect } from "react";
 import { useState } from "react/cjs/react.development";
-import ReactDOM from "react-dom";
 import "./chance-wheel.css";
 
-
-
 function ChanceWheel (props){
-
   const [state, setState] = useState({
     radius: 45, // PIXELS
     rotate: 0, // DEGREES
@@ -16,34 +12,22 @@ function ChanceWheel (props){
     offset: null, // RADIANS
     net: null, // RADIANS
     result: null, // INDEX
-    spinning: false
+    spinning: true,
+    list : []
     })
 
-  let list = [1,2,3,4,5,6];
-   
- 
-   useEffect(()=>{renderWheel()});
-  /*componentDidMount() {
-    // generate canvas wheel on load
-    this.renderWheel();
-  }
+
+useEffect(()=>{renderWheel()});
   
-  componentDidUpdate(){
-    //check all updates at momment 
-    this.renderWheel();
-  }*/
-
-
 //switch//
-//its not complete yet,it should be more costomized 
 const accordion = () =>{
     var  n = props.value;
     var temp = [];   
     for (var i = 1; i <= Number(n); i++) { 
       temp.push(i);
   }
-    list = temp;
-    console.log(state);
+    state.list = temp;
+   // console.log(state);
 }
 
  
@@ -53,7 +37,7 @@ function renderWheel() {
     // determine number/size of sectors that need to created
     let numOptions = props.value;
     let arcSize = (2 * Math.PI) / numOptions;
-   /* this.setState({
+   /* setState({
       angle: arcSize
     });*/
 
@@ -62,7 +46,7 @@ function renderWheel() {
     // dynamically generate sectors from state list
     let angle = 0;
     for (let i = 0; i < numOptions; i++) {
-      let text = list[i];
+      let text = state.list[i];
       renderSector(i + 1, text, angle, arcSize, getColor(numOptions,i));
       angle += arcSize;
     }
@@ -90,10 +74,10 @@ const topPosition = (num, angle) => {
       degreesOff = Math.PI / 2;
     }
 
-    // this.setState({
-    //   top: topSpot - 1,
-    //   offset: degreesOff
-    // });
+  /*  setState({
+    top: topSpot - 1,
+    offset: degreesOff
+    });*/
   };
 
 function renderSector(index, text, start, arc, color) {
@@ -129,6 +113,7 @@ function renderSector(index, text, start, arc, color) {
   }
 
 function getColor(size, n) {
+  
     // base on the pieces number they would be colored
     //it could be better (mostahab)
     if(size % 2 == 1){
@@ -158,21 +143,22 @@ const spin = () => {
     // set random spin degree and ease out time
     // set state variables to initiate animation
     let randomSpin = Math.floor(Math.random() * 900) + 500;
+    console.log(randomSpin);
     setState({
       rotate: randomSpin,
       easeOut: 2,
       spinning: true
       
     });
+    console.log("spin",state.spinning);
     // calcalute result after wheel stops spinning
     setTimeout(() => {
-      getResult(randomSpin);
+     //getResult(randomSpin);
     }, 2000);
   };
 
-const getResult = spin => {
-
-    const { angle, top, offset, list } = state;
+/*const getResult = spin => {
+    const { angle, top, offset,list} = state;
     let netRotation = ((spin % 360) * Math.PI) / 180; // RADIANS
     let travel = netRotation + offset;
     let count = top + 1;
@@ -188,10 +174,20 @@ const getResult = spin => {
     }
 
     // set state variable to display result
-    setState({
+  /* /* setState({
       net: netRotation,
       result: result
+    });;
+  }*/
+
+const reset = () => {
+    // reset wheel and result
+    setState({
+      rotate: 0,
+      easeOut: 0,
+      spinning: false
     });
+    console.log("reset",state.spinning);
   };
 
 
@@ -208,8 +204,17 @@ const getResult = spin => {
             }s ease-out`
           }}/></div> 
           </div>
+
         <div class="footer">
-         <button type="button" id="spin" onClick={spin}>SPIN </button> 
+        {state.spinning ? (
+          <button type="button" id="reset" onClick={reset}>
+            reset
+          </button>
+        ) : (
+          <button type="button" id="spin" onClick={spin}>
+            spin
+          </button>
+        )}
         </div>        
       </div>
     );
